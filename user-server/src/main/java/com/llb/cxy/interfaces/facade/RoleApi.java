@@ -1,13 +1,12 @@
 package com.llb.cxy.interfaces.facade;
 
-import com.llb.cxy.interfaces.assembler.RoleAssembler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import com.llb.cxy.application.service.RoleApplicationService;
 import com.llb.cxy.core.model.ResultBody;
 import com.llb.cxy.core.page.Page;
-import com.llb.cxy.domain.user.entity.Role;
+import com.llb.cxy.interfaces.assembler.RoleAssembler;
 import com.llb.cxy.interfaces.dto.RoleDTO;
 
 import lombok.extern.slf4j.Slf4j;
@@ -24,7 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 @RequestMapping("/roles")
 @Slf4j
-public class RoleApi {
+public class RoleApi extends BaseApi {
 
     @Autowired
     RoleApplicationService roleApplicationService;
@@ -73,9 +72,10 @@ public class RoleApi {
      * @Param  * @param ids
      * @return
      **/
-    @DeleteMapping("/{roleId}/user/{userId}")
-    public ResultBody remove(@PathVariable("roleId") Long roleId, @PathVariable("userId") Long userId) {
-        roleApplicationService.remove(roleId, userId);
+    @DeleteMapping
+    public ResultBody remove(@RequestParam Long roleId) {
+        this.getUserInfo();
+        roleApplicationService.remove(roleId);
         return ResultBody.ok();
     }
 
@@ -104,9 +104,8 @@ public class RoleApi {
      * @Param  * @param roleId
      * @return {@link com.llb.cxy.core.model.ResultBody}
      **/
-    // TODO: 2021/1/19 //删除  PathVariable
-    @GetMapping("/{roleId}")
-    public ResultBody getRoleById(@PathVariable("roleId") Long roleId) {
+    @GetMapping(value = "id")
+    public ResultBody getRoleById(@RequestParam Long roleId) {
         return ResultBody.ok().data(roleApplicationService.getRoleById(roleId));
     }
 

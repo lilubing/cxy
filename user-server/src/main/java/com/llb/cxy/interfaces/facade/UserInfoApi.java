@@ -96,8 +96,8 @@ public class UserInfoApi extends BaseApi {
      * @Param * @param personId
      * @return {@link com.llb.cxy.core.model.ResultBody}
      **/
-    @DeleteMapping(value = "/{userId}")
-    public ResultBody delete(@PathVariable("userId") Long userId) {
+    @DeleteMapping
+    public ResultBody delete(@RequestParam Long userId) {
         getUserInfo();
         userApplicationService.deleteById(userId);
         return ResultBody.ok();
@@ -111,8 +111,8 @@ public class UserInfoApi extends BaseApi {
      * @Param * @param personId
      * @return {@link com.llb.cxy.core.model.ResultBody}
      **/
-    @GetMapping(value = "/{userId}")
-    public ResultBody findById(@PathVariable("userId") Long userId) {
+    @GetMapping(value = "id")
+    public ResultBody findById(@RequestParam Long userId) {
         return ResultBody.ok().data((userApplicationService.findById(userId)));
     }
 

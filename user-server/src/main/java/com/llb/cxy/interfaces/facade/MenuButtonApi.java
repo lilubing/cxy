@@ -76,8 +76,8 @@ public class MenuButtonApi extends BaseApi {
      * @param menuButtonId
      * @throws
      */
-    @DeleteMapping("/{menuButtonId}")
-    public ResultBody deleteMenuButtons(@PathVariable("menuButtonId") Long menuButtonId) {
+    @DeleteMapping
+    public ResultBody deleteMenuButtons(@RequestParam Long menuButtonId) {
         try {
             menuButtonApplicationService.delete(menuButtonId);
             return ResultBody.ok();
@@ -95,8 +95,8 @@ public class MenuButtonApi extends BaseApi {
      * @Param  * @param menuButtonId
      * @return {@link com.llb.cxy.core.model.ResultBody}
      **/
-    @GetMapping("/{menuButtonId}")
-    public ResultBody getMenuButton(@PathVariable("menuButtonId") Long menuButtonId) {
+    @GetMapping
+    public ResultBody getMenuButton(@RequestParam Long menuButtonId) {
         try {
             MenuButtonDTO dto = menuButtonApplicationService.findByMenuButtonId(menuButtonId);
             String str = JSON.toJSONString(dto).toString();
@@ -138,8 +138,8 @@ public class MenuButtonApi extends BaseApi {
      * @Param  * @param roleId
      * @return {@link java.util.List<java.util.Map<java.lang.String,java.lang.Object>>}
      **/
-    @GetMapping(value = "/menuButtonsTreeByRoleId/{roleId}")
-    public List<Map<String, Object>> menuButtonsTreeByRoleId(@PathVariable("roleId") Long roleId) {
+    @GetMapping(value = "/menuButtonsTreeByRoleId")
+    public List<Map<String, Object>> menuButtonsTreeByRoleId(@RequestParam Long roleId) {
         return menuButtonApplicationService.getMenuButtonsTreeByRoleId(0L, roleId);
     }
 
