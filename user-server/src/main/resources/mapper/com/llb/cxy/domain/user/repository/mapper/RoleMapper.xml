@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.llb.cxy.domain.user.repository.mapper.RoleMapper">
+    <resultMap id="BaseResultMap" type="com.llb.cxy.domain.user.repository.po.RolePO">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="description" jdbcType="VARCHAR" property="description"/>
+        <result column="parent_id" jdbcType="BIGINT" property="parentId"/>
+        <result column="create_user_id" jdbcType="BIGINT" property="createUserId"/>
+        <result column="create_time" jdbcType="INTEGER" property="createTime"/>
+        <result column="last_modify_user_id" jdbcType="BIGINT" property="lastModifyUserId"/>
+        <result column="last_modify_time" jdbcType="INTEGER" property="lastModifyTime"/>
+        <result column="deleted" jdbcType="TINYINT" property="deleted"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, `name`, description, parent_id, create_user_id, create_time, last_modify_user_id, last_modify_time, deleted
+    </sql>
+    <update id="updateRoleName">
+        update sys_role set `name` = #{name}, `last_modify_time` = #{lastModifyTime},
+            `description` = #{description} where id = #{roleId}
+    </update>
+
+    <select id="findRolesByUserId" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from sys_role
+        where
+        id in (select role_id from sys_role_user WHERE user_id = #{userId} )
+    </select>
+    <select id="selectBtnValuesByUserId" resultType="java.lang.String">
+        select p.btn_id
+        from sys_menu_button p, (
+                select menu_button_id
+                from sys_role_menu_button rp, sys_role_user ru
+                where ru.user_id = #{userid}
+                    and rp.role_id = ru.role_id
+            ) rpu
+        where p.menu_button_id = rpu.menu_button_id
+    </select>
+
+    <select id="findByConditions" parameterType="Map" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from sys_role
+        where deleted = 0
+        <if test="params != null">
+            <if test="params.name != null">
+                and name = #{params.name}
+            </if>
+            order by id ${params.sort}
+        </if>
+
+        limit #{page.pageNum} , #{page.pageSize}
+    </select>
+
+    <select id="findTotalByConditions" resultType="java.lang.Integer">
+        select
+        count(id)
+        from sys_role
+        where deleted = 0
+        <if test="params.name != null">
+            and name = #{params.name}
+        </if>
+    </select>
+</mapper>

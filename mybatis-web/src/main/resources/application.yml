@@ -1,0 +1,345 @@
+project-name: '@project.artifactId@'
+debug: true
+# tomcat config
+#java8
+#XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=. -XX:+PrintGCDateStamps -XX:+PrintGCDetails -Xloggc:gc.log -XX:+UseGCLogFileRotation -XX:NumberOfGCLogFiles=10 -XX:GCLogFileSize=100M
+server:
+  port: 8090
+  max-http-header-size: 20480 #bytes 这里的大小决定了每个请求的大小2M就是每个请求占用2M
+  connection-timeout: 30000  #网络连接超时，单位：毫秒。设置为 0 表示永不超时，这样设置有隐患的。通常可设置为 30000 毫秒。
+  tomcat:
+    max-connections: 20000
+    uri-encoding: UTF-8
+    background-processor-delay: 30 # secs
+    #max-http-post-size: 20480
+    max-http-form-post-size: 20480
+    max-threads: 500
+    min-spare-threads: 20
+    remote-ip-header: x-forwarded-for
+    protocol-header: x-forwarded-proto
+  compression:
+    enabled: true #是否开启压缩，默认为false
+    mime-types:
+      - 'text/html,text/xml,text/plain,text/javascript,application/json,application/xml'
+    min-response-size: 2048 # is compression enabled (off, on, or an integer content length limit)
+      #jsp-servlet:
+      #init-parameters:
+    #development: true #spring-boot对JSP的重新编译会导致不可接受性能降低在生产环境上。
+  #use-forward-headers: true #反向代理用
+  #error: 开发环境用 打印错误堆栈以及信息
+  #  include-stacktrace: always
+  #  include-exception: true
+  servlet:
+    context-path: /${project-name}/
+    session:
+      cookie:
+        name: mybatis-web
+
+#logging
+logging:
+  config: classpath:logback-spring.xml
+  #file:
+    #name: application.log
+#  level:
+#    org:
+#      springframework:
+#        web: DEBUG
+#      hibernate: ERROR
+
+
+#spring datasource
+spring:
+  application:
+    name: ${project-name}
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    url: jdbc:mysql://127.0.0.1:3306/cxy?useUnicode=true&characterEncoding=utf8&autoReconnect=true&autoReconnectForPools=true&serverTimezone=Asia/Shanghai&useSSL=true
+    username: cxy
+    password: llb123
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    #initialize: false #是否初始化
+    #initialization-mode: false
+    #schema: classpath:sql/h2/schema.sql #数据库结构
+    #data: classpath:sql/h2/import-data.sql  # 数据文件
+    sql-script-encoding: UTF-8  # 导入编码
+    continue-on-error: false
+    # 下面为连接池的补充设置，应用到上面所有数据源中
+    druid:
+      # 初始化大小，最小，最大
+      #300
+      initialSize: 5
+      #50
+      minIdle: 5
+      #1000
+      maxActive: 50
+      # 配置获取连接等待超时的时间
+      maxWait: 60000
+      #验证连接的有效性
+      #test-while-idle: true
+      #获取连接时候验证，会影响性能
+      #test-on-borrow: true
+      #Idle时做检查
+      testWhileIdle: true
+      #获取连接处做检查
+      testOnBorrow: false
+      #归还连接处做检查
+      testOnReturn: false
+      #用来检测连接是否有效的sql，要求是一个查询语句，常用select 'x'。如果validationQuery为null，testOnBorrow、testOnReturn、testWhileIdle都不会起作用。
+      validation-query: SELECT 1 FROM DUAL
+      # 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
+      timeBetweenEvictionRunsMillis: 60000
+      # 配置一个连接在池中最小生存的时间，单位是毫秒
+      minEvictableIdleTimeMillis: 300000
+      # 是否缓存preparedStatement，也就是PSCache。PSCache对支持游标的数据库性能提升巨大，比如说oracle。在mysql下建议关闭
+      poolPreparedStatements: false
+      #配置监控统计拦截的filters，去掉后监控界面sql无法统计，'wall'用于防火墙
+      maxPoolPreparedStatementPerConnectionSize: 20
+      #合并多个DruidDataSource的监控数据
+      use-global-data-source-stat: true
+      #filters: stat,wall
+      # 通过connectProperties属性来打开mergeSql功能；慢SQL记录
+      #connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=500
+      filter:
+        stat:
+          # 慢SQL记录
+          log-slow-sql: true
+          slow-sql-millis: 2000
+          merge-sql: true
+          enabled: true
+          db-type: mysql
+        wall:
+          config:
+            multi-statement-allow: true
+
+      # 配置监控服务器
+      stat-view-servlet:
+        login-username: admin
+        login-password: 1234567
+        reset-enable: false
+        url-pattern: /druid/*
+        # 添加IP白名单
+        #allow:
+        # 添加IP黑名单，当白名单和黑名单重复时，黑名单优先级更高
+        #deny:
+      web-stat-filter:
+        # 添加过滤规则
+        url-pattern: /*
+        # 忽略过滤格式
+        exclusions: "*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*"
+
+    #hikari:
+    #  maximum-pool-size:
+    #platform: h2
+
+  ## JPA Settings
+  jpa:
+    properties:
+      hibernate:
+        hbm2ddl:
+          # Hibernate ddl auto (create, create-drop, update) 自动创建删除表validate
+          auto: none
+        format_sql: false
+        # stripped before adding them to the entity manager)
+        dialect: org.hibernate.dialect.MySQL57InnoDBDialect
+    generate-ddl: true
+    # Show or not log for each sql query
+    show-sql: true
+    database: MYSQL
+
+  #  zipkin:
+  #    base-url: http://localhost:9411
+  #  sleuth:
+  #    sampler:
+  #      percentage: 1.0
+  #spring mvc config
+  # 页面默认前缀目录
+  mvc:
+    view:
+      # 页面默认前缀目录
+      prefix: /WEB-INF/page/
+      # 响应页面默认后缀
+      suffix: .jsp
+  #    static-path-pattern: /**
+  #添加那个目录的文件需要restart
+  devtools:
+    restart:
+      additional-paths: src/main/java
+
+  http:      #encoding default UTF-8
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    #joda-date-time-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+    serialization:
+      indent_output: true
+  #redis:
+  #  host: 10.197.236.228
+  #  password:
+  servlet:
+    multipart:
+      #上传文件大小
+      max-file-size: 30MB
+      #一个请求多个文件的最大值
+      max-request-size: 200MB
+  main:
+    allow-bean-definition-overriding: true #当遇到同样名字的时候，是否允许覆盖注册
+#  resources:
+#    static-locations:
+#    - 'classpath:/WEB-INF/resources/'
+
+
+mybatis:
+  # 注意：对应实体类的路径
+  type-aliases-package: com.llb.cxy.domain.*.repository.po
+  #注意：一定要对应mapper映射xml文件的所在路径
+  mapper-locations: classpath:mapper/com/llb/cxy/domain/user/repository/mapper/*.xml
+  #MyBatis配置文件中定义typeHandler扫描包路径
+  type-handlers-package: com.llb.cxy.domain.myBatis.entity.valueobject.enumConvert
+  configuration:
+    log-impl:  org.apache.ibatis.logging.slf4j.Slf4jImpl
+    #log-impl: org.apache.ibatis.logging.stdout.StdOutImpl #控制台打印sql
+    map-underscore-to-camel-case: true #这样就可以实现数据库下划线字段到POJO类驼峰形式的自动映射了
+    #tkmybatis 枚举值处理
+    enum-as-simple-type: true
+    default-enum-type-handler: org.apache.ibatis.type.EnumOrdinalTypeHandler
+    call-setters-on-nulls: true
+
+mapper:
+  mappers:
+    - com.llb.cxy.mybatis.MyMapper
+  not-empty: false
+  identity: MYSQL
+  #tkmybatis 枚举值处理
+  enum-as-simple-type: true
+
+#pagehelper分页插件
+pagehelper:
+  helperDialect: mysql
+  reasonable: true
+  supportMethodsArguments: true
+  params: count=countSql
+
+eureka:
+  instance:
+    # 使用 ip 代替实例名
+    prefer-ip-address: true
+    # 实例的主机名
+    hostname: ${spring.cloud.client.ip-address}
+    # 实例的 ID 规则
+    instance-id: ${spring.application.name}:${spring.cloud.client.ip-address}:${spring.application.instance_id:${server.port}}
+    #服务刷新时间，每隔这个时间会主动心跳一次
+    lease-renewal-interval-in-seconds: 3
+    #服务过期时间,超过这个时间没有接收到心跳EurekaServer就会将这个实例剔除
+    lease-expiration-duration-in-seconds: 10
+  client:
+    healthcheck:
+      enabled: true
+    serviceUrl:
+      defaultZone: http://user:password1236@localhost:8761/eureka
+    fetch-registry: true #定期更新eureka server拉去服务节点清单，快速感知服务下线
+    registry-fetch-interval-seconds: 5  #eureka client刷新本地缓存时间，默认30s
+#对定时任务或异步任务来说，读取超时配置得长些问题不大。但面向用户响应的请求或是微
+  #服务短平快的同步接口调用，并发量一般较大，我们应该设置一个较短的读取超时时间，以
+  #防止被下游服务拖慢，通常不会设置超过 30 秒的读取超时。
+hystrix:
+  command:
+    default:
+      execution:
+        timeout:
+          enabled: true
+        isolation:
+          thread:
+            timeoutInMilliseconds: 15000
+ribbon:
+  #readTimeout与connectTimeout 必须同时配置。不然会不省心
+  ReadTimeout: 2000
+  ConnectTimeout: 5000
+  #Get 请求应该是无状态或者幂等的，短信接口可以设计为支持幂等调用的
+  #Get 请求在某个服务端节点出现问题（比如读取超时）时，Ribbon 会自动重试一次：
+  #有状态的 API 接口不应该定义为 Get。根据 HTTP 协议的规范，Get 请求用于数据查询，而 Post 才是把数据提交到服务端用于修改或新增。选择 Get 还是 Post 的依据，应该是 API 的行为，而不是参数大小。这里的一个误区是，Get 请求的参数包含在 Url QueryString 中，会受浏览器长度限制，所以一些同学会选择使用 JSON 以 Post 提交大参数，使用 Get 提交小参数。
+  MaxAutoRetries: 1 #同一台实例最大重试次数,不包括首次调用
+  #禁用服务调用失败后在下一个服务端节点的自动重试。在配置文件中添加
+  MaxAutoRetriesNextServer: 1 #重试负载均衡其他的实例最大重试次数,不包括首次调用
+  OkToRetryOnAllOperations: false  #是否所有操作都重试
+
+###开启Hystrix断路器
+#同时配置 Feign 和 Ribbon 的参数，最终生效的是 Feign： LoadBalancerFeignClient 源码中可以看到，如果 Request.Options 不是默认值，就会创建一个 FeignOptionsClientConfig 代替原来 Ribbon 的 DefaultClientConfigImpl，导致 Ribbon 的配置被 Feign 覆盖
+feign:
+  client:
+    config:
+      default:
+        #readTimeout与connectTimeout 必须同时配置。不然会不省心
+        readTimeout: 3000
+        connectTimeout: 3000
+#  hystrix:
+#    enabled: true
+
+cxy:
+  #公众号域名
+  nginx-domain: ://www.5itrip.com
+  #nginx端口号
+  nginx-port: 80
+  #nginx 扩展前缀
+  nginx-port-prefix: 80/api
+  scheduling: 0  #定时任务 0关闭 1启动
+  smsResend: 0   #短信重发定时任务 0关闭 1启动
+  sms:
+    pnrSend: 0 #pnr生成和人工录入是否发送短信 0关闭 1启动
+  SnowflakeIdWorkerWorkerId: 0
+  SnowflakeIdWorkerDatacenterId: 1
+organization:
+  savepath: C:/Users/moon/Desktop/enjoylearning/saveFile
+integralGoods:
+  savepath: D:/Workspace Two/cxy/cxy-web/src/main/webapp/WEB-INF/images/integralGoods
+apiData: #接口推送用
+  huadong: /data/apiData/huadong #华东院
+dateFormat: yyyy-MM-dd HH:mm:ss
+
+
+oauth2:
+  common:
+    jwtSigningKey: 123
+  client:
+    oauth2:
+      cxy-webview:
+        client-id: c2
+        client-secret: spring
+
+#若要作为 ResourceServer 必须注释 yaml security.oauth2, permitAuthenticationFilter @Component 必须有单独的 ResourceServer
+auth-server: http://sso.5itrip.com:8050/oauth2-authorization-server
+#auth-server: http://sso.5itrip.com:8050/auth
+resources-server: http://sso.5itrip.com:8060/oauth2-resource-server
+
+#security:
+#  oauth2:
+#    client:
+#      #指定OAuth2 client ID
+#      client-id: c2
+#      #指定OAuth2 client secret. 默认是一个随机的secret
+#      client-secret: spring
+#      #指定获取access token的URI.
+#      access-token-uri: ${auth-server}/oauth/token
+#      #用户跳转去获取access token的URI.
+#      user-authorization-uri: ${auth-server}/oauth/authorize
+#      #pre-established-redirect-ur: ${auth-server}/callback
+#      #authorized-grant-types: authorization_code
+#    resource:
+#      #指定user info的URI
+#      #user-info-uri: ${auth-server}/oauth/extra
+#      user-info-uri: ${resources-server}/user/extra
+#        #user-info-uri: ${resources-server}/user/me
+#        # 检查token
+#        #token-info-uri: ${auth-server}/oauth/check_token
+#        #prefer-token-info: false
+#        #jwt:
+#        #  key-uri: ${auth-server}/oauth/token_key
+#      #key-value: 123
+#    #authorization:
+#    #  check-token-access: ${auth-server}/oauth/check_token
+#
+#  #  #指定Session的创建策略(always, never, if_required, stateless).
+#  #sessions: never

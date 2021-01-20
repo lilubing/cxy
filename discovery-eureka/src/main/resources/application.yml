@@ -1,0 +1,32 @@
+#security:
+#  basic:
+#    enabled: true
+#  user:
+#    name: user
+#    password: password1236
+spring:
+  security:
+    user:
+      name: "user"
+      password: "password1236"
+
+server:
+  port: 8761
+eureka:
+  server:
+    enable-self-preservation: true #设置为false表示关闭保护模式,会及时清理 Instances currently registered with Eureka列表项，尽量不要修改
+    eviction-interval-timer-in-ms: 5000 #启用主动失效，并且每次主动失效检测间隔为5000ms
+    response-cache-update-interval-ms: 5000 #从ReadWriteMap刷新节点信息到ReadOnlyMap的时间，client读取的是后者，默认30s
+  client:
+    register-with-eureka: false #表示是否将自己注册到EurekaServer默认为true,单点设置false
+    fetch-registry: false #表示是否从 EurekaServer 获取注册信息 默认为true,单点设置为false，不需要同步其它的EurekaServer节点的数据
+    registry-fetch-interval-seconds: 5  #eureka client刷新本地缓存时间，默认30s
+    service-url:
+      defaultZone: http://user:password1236@${spring.cloud.client.ip-address}:${server.port}/eureka
+      #http://user:password1236@127.0.0.1:8761/eureka
+      #defaultZone: http://user:password1236@${spring.cloud.client.ipAddress}:8761/eureka
+  instance:
+    prefer-ip-address: true
+    instance-id: ${spring.application.name}:${spring.cloud.client.ip-address}:${spring.application.instance_id:${server.port}}
+    lease-renewal-interval-in-seconds: 3 #服务刷新时间，每隔这个时间会主动心跳一次
+    lease-expiration-duration-in-seconds: 10 #服务过期时间,超过这个时间没有接收到心跳EurekaServer就会将这个实例剔除

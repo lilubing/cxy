@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.llb.cxy.domain.user.repository.mapper.RoleUserMapper">
+    <resultMap id="BaseResultMap" type="com.llb.cxy.domain.user.repository.po.RoleUserPO">
+        <id column="ru_id" jdbcType="BIGINT" property="ruId" />
+        <result column="role_id" jdbcType="BIGINT" property="roleId" />
+        <result column="user_id" jdbcType="BIGINT" property="userId" />
+    </resultMap>
+    <sql id="Base_Column_List">
+        ru_id, role_id, user_id
+    </sql>
+
+    <delete id="deleteByRoleId">
+        delete from sys_role_user where role_id = ${roleId}
+    </delete>
+
+    <delete id="deleteByUserIdAndRoleId">
+        delete from sys_role_user where user_id = ${userId}
+        <if test="listIds != null">
+            and role_id in
+            <foreach item="item" index="index" collection="listIds" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+    </delete>
+
+    <select id="selectByUserIdAndRoleId" resultType="java.lang.Long">
+        select ru_id from sys_role_user where user_id = ${userId} and role_id = ${roleId} limit 1
+    </select>
+    <select id="findRoleIdsByUserId" resultType="java.lang.String">
+        select role_id from sys_role_user where user_id = ${userId}
+    </select>
+</mapper>

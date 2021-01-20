@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.llb.cxy.domain.user.repository.mapper.UserInfoMapper">
+    <resultMap id="BaseResultMap" type="com.llb.cxy.domain.user.repository.po.UserInfoPO">
+        <id column="id" jdbcType="BIGINT" property="id" />
+        <result column="user_name" jdbcType="VARCHAR" property="userName" />
+        <result column="real_name" jdbcType="VARCHAR" property="realName" />
+        <result column="org_id" jdbcType="BIGINT" property="orgId" />
+        <result column="org_name" jdbcType="VARCHAR" property="orgName" />
+        <result column="email" jdbcType="VARCHAR" property="email" />
+        <result column="mobile_phone" jdbcType="VARCHAR" property="mobilePhone" />
+        <result column="office_phone" jdbcType="VARCHAR" property="officePhone" />
+        <result column="qq" jdbcType="BIGINT" property="qq" />
+        <result column="we_chat" jdbcType="VARCHAR" property="weChat" />
+        <result column="sex" jdbcType="TINYINT" property="sex" />
+        <result column="home_address" jdbcType="VARCHAR" property="homeAddress" />
+        <result column="office_address" jdbcType="VARCHAR" property="officeAddress" />
+        <result column="default_address" jdbcType="TINYINT" property="defaultAddress" />
+        <result column="py_full" jdbcType="VARCHAR" property="pyFull" />
+        <result column="py_short" jdbcType="VARCHAR" property="pyShort" />
+        <result column="position" jdbcType="VARCHAR" property="position" />
+        <result column="job_number" jdbcType="VARCHAR" property="jobNumber" />
+        <result column="nationality" jdbcType="VARCHAR" property="nationality" />
+        <result column="birth_date" jdbcType="DATE" property="birthDate" />
+        <result column="last_login_time" jdbcType="INTEGER" property="lastLoginTime" />
+        <result column="status" jdbcType="TINYINT" property="status" />
+        <result column="activate_status" jdbcType="TINYINT" property="activateStatus" />
+        <result column="create_user_id" jdbcType="BIGINT" property="createUserId" />
+        <result column="create_time" jdbcType="INTEGER" property="createTime" />
+        <result column="last_modify_user_id" jdbcType="BIGINT" property="lastModifyUserId" />
+        <result column="last_modify_time" jdbcType="INTEGER" property="lastModifyTime" />
+        <result column="deleted" jdbcType="TINYINT" property="deleted" />
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, user_name, real_name, org_id, org_name, email, mobile_phone, office_phone, qq,
+        we_chat, sex, home_address, office_address, default_address, py_full, py_short, `position`,
+        job_number, nationality, birth_date, last_login_time, `status`, activate_status, create_user_id,
+        create_time, last_modify_user_id, last_modify_time, deleted
+    </sql>
+    <update id="updateUserInfoDynamic" parameterType="com.llb.cxy.domain.user.repository.po.UserInfoPO">
+        update sys_user_info
+        <trim prefix="set" suffixOverrides=",">
+            <if test="userName!=null">user_name=#{userName},</if>
+            <if test="realName!=null">real_name=#{realName},</if>
+            <if test="status!=null">status=#{status},</if>
+            <if test="deleted!=null">deleted=#{deleted},</if>
+        </trim>
+        WHERE id = #{id}
+    </update>
+
+    <select id="findUserByLoginName" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from sys_user_info
+        where
+        <if test="userName != null">
+            user_name = #{userName}
+        </if>
+    </select>
+
+    <select id="findByConditions" parameterType="Map" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from sys_user_info
+        where deleted = 0
+        <if test="params != null">
+            <if test="params.userName != null and params.userName !=''">
+                and user_name = #{params.userName}
+            </if>
+            <if test="params.realName != null and params.realName !=''">
+                and real_name = #{params.realName}
+            </if>
+            order by id ${params.sort}
+        </if>
+
+        limit #{page.pageNum} , #{page.pageSize}
+    </select>
+
+    <select id="findTotalByConditions" resultType="java.lang.Integer">
+        select
+        count(id)
+        from sys_user_info
+        where deleted = 0
+        <if test="params != null">
+            <if test="params.userName != null and params.userName !=''">
+                and user_name = #{params.userName}
+            </if>
+            <if test="params.realName != null and params.realName !=''">
+                and real_name = #{params.realName}
+            </if>
+        </if>
+    </select>
+</mapper>

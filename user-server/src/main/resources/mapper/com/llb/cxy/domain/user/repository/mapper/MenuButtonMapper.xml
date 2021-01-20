@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.llb.cxy.domain.user.repository.mapper.MenuButtonMapper">
+    <resultMap id="BaseResultMap" type="com.llb.cxy.domain.user.repository.po.MenuButtonPO">
+        <id column="menu_button_id" jdbcType="BIGINT" property="menuButtonId" />
+        <result column="parent_id" jdbcType="BIGINT" property="parentId" />
+        <result column="btn_id" jdbcType="VARCHAR" property="btnId" />
+        <result column="name" jdbcType="VARCHAR" property="name" />
+        <result column="orders" jdbcType="SMALLINT" property="orders" />
+        <result column="type" jdbcType="TINYINT" property="type" />
+        <result column="menu_button_value" jdbcType="VARCHAR" property="menuButtonValue" />
+        <result column="uri" jdbcType="VARCHAR" property="uri" />
+        <result column="icon" jdbcType="VARCHAR" property="icon" />
+        <result column="state" jdbcType="TINYINT" property="state" />
+        <result column="create_time" jdbcType="INTEGER" property="createTime" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        menu_button_id, parent_id, btn_id, `name`, orders, `type`, menu_button_value, uri,
+        icon, `state`, create_time
+    </sql>
+
+    <!-- 添加角色权限关联表 -->
+    <insert id="insertRoleMenuButton">
+        insert into sys_role_menu_button (rp_id, role_id, menu_button_id) values (#{id}, #{roleId}, #{menuButtonId})
+    </insert>
+    <!-- 删除角色权限关联表 -->
+    <delete id="deleteRoleMenuButton">
+        delete from sys_role_menu_button where role_id = ? and menu_button_id = ?
+    </delete>
+
+    <select id="findByParentId" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from sys_menu_button t
+        where t.parent_id = #{menuButtonId}
+        order by t.orders asc
+    </select>
+    <select id="findByMenuButtonIdAndRoleId" resultType="java.util.HashMap">
+        SELECT p.menu_button_id, p.parent_id, p.name, p.type, p.menu_button_value
+            , p.uri, p.icon, p.state, p.create_time, p.orders, rp.as_id
+        FROM (
+            SELECT *
+            FROM sys_menu_button
+            WHERE parent_id = #{menuButtonId}
+        ) p
+            LEFT JOIN (
+                SELECT menu_button_id as as_id
+                FROM sys_role_menu_button
+                WHERE role_id = #{roleId}
+            ) rp
+            ON p.menu_button_id = rp.as_id
+        ORDER BY p.orders ASC
+    </select>
+
+    <select id="findMenuButtonByUserIdParentMenuIdMenuButtonType" resultType="java.util.HashMap">
+        SELECT DISTINCT menu_button_id , btn_id, `name`
+        FROM sys_menu_button
+        WHERE parent_id = #{parentMenuId}
+            AND menu_button_id IN (
+                SELECT DISTINCT menu_button_id AS menu_button_id
+                FROM sys_role_menu_button
+                WHERE role_id IN (
+                    SELECT DISTINCT role_id
+                    FROM sys_role_user
+                    WHERE user_id = #{userId}
+                )
+            )
+            AND type = #{menuButtonType}
+    </select>
+    <select id="getMaxOrders" resultType="java.lang.Integer">
+        select max(t.orders) from sys_menu_button t where parent_id = #{parentMenuId}
+    </select>
+    <select id="findMenuButtonByUserId" resultType="java.lang.Long">
+        select distinct menu_button_id as menu_button_id from sys_role_menu_button
+        where role_id in
+            (select distinct role_id from sys_role_user where user_id = #{userId})
+    </select>
+</mapper>

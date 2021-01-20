@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.llb.cxy.domain.user.repository.mapper.UserMapper">
+    <resultMap id="BaseResultMap" type="com.llb.cxy.domain.user.repository.po.UserPO">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="user_name" jdbcType="VARCHAR" property="userName"/>
+        <result column="password" jdbcType="VARCHAR" property="password"/>
+        <result column="other_id" jdbcType="VARCHAR" property="otherId"/>
+        <result column="status" jdbcType="TINYINT" property="status"/>
+        <result column="deleted" jdbcType="TINYINT" property="deleted"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, user_name, `password`, other_id, `status`, deleted
+    </sql>
+    <update id="updateUserDynamic" parameterType="com.llb.cxy.domain.user.repository.po.UserPO">
+        update sys_user
+        <trim prefix="set" suffixOverrides=",">
+            <if test="userName!=null">user_name=#{userName},</if>
+            <if test="password!=null">password=#{password},</if>
+            <if test="otherId!=null">other_id=#{otherId},</if>
+            <if test="status!=null">status=#{status},</if>
+            <if test="deleted!=null">deleted=#{deleted},</if>
+        </trim>
+        WHERE id = #{id}
+    </update>
+
+    <select id="findUserByLoginName" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from sys_user
+        where
+        <if test="userName != null">
+            user_name = #{userName}
+        </if>
+    </select>
+</mapper>

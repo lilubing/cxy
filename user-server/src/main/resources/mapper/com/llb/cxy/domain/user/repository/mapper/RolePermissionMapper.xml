@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.llb.cxy.domain.user.repository.mapper.RoleMenuButtonMapper">
+    <resultMap id="BaseResultMap" type="com.llb.cxy.domain.user.repository.po.RoleMenuButtonPO">
+        <id column="rp_id" jdbcType="BIGINT" property="rpId" />
+        <result column="role_id" jdbcType="BIGINT" property="roleId" />
+        <result column="menu_button_id" jdbcType="BIGINT" property="menuButtonId" />
+    </resultMap>
+    <sql id="Base_Column_List">
+        rp_id, role_id, menu_button_id
+    </sql>
+
+    <delete id="deleteByMenuButtonId">
+        delete from sys_role_menu_button where menu_button_id = #{menuButtonId}
+    </delete>
+    <delete id="deleteByRoleId">
+        delete from sys_role_menu_button where role_id = #{roleId}
+    </delete>
+    <delete id="deleteRoleMenuButtonByRoleIdAndMenuButtonId">
+        delete from sys_role_menu_button where role_id = #{roleId} and menu_button_id = #{menuButtonId}
+    </delete>
+    <select id="findByMenuButtonIdAndRoleId"
+            resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from sys_role_menu_button
+        where
+        menu_button_id = #{menuButtonId} and role_id = #{roleId}
+    </select>
+</mapper>
