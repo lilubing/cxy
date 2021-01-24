@@ -6,7 +6,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import com.google.common.collect.Maps;
 import com.llb.cxy.domain.user.repository.facade.MenuButtonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -287,5 +286,17 @@ public class MenuButtonRepositoryImpl extends GenericManagerImpl<MenuButtonPO, L
         for (Map<String, Object> map : list) {
             findMenuButtonByUserIdChildren(map, menuButtonType, userId, result);
         }
+    }
+
+    /**
+     * 获取所有菜单按钮与角色信息
+     * @Author LiLuBing
+     * @Date 2021-01-21 09:37
+     * @Param  * @param
+     * @return {@link List<Map<String, String>>}
+     **/
+    @Override
+    public List<Map<String, String>> getAllMenuButtonAndRole() {
+        return menuButtonMapper.getAllMenuButtonAndRole();
     }
 }

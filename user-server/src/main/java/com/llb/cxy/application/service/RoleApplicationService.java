@@ -70,11 +70,10 @@ public class RoleApplicationService {
      * @Author LiLuBing
      * @Date 2021-01-13 15:02
      * @Param  * @param roleId
-     * @param userId
      * @return
      **/
-    public void remove(Long roleId, Long userId) {
-        roleDomainService.remove(roleId, userId);
+    public void remove(Long roleId) {
+        roleDomainService.remove(roleId);
     }
 
     /**

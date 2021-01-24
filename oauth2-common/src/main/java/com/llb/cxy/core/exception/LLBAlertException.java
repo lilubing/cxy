@@ -6,21 +6,21 @@ package com.llb.cxy.core.exception;
  * author: Administrator <br>
  * version: 1.0 <br>
  */
-public class LLBAlertException extends LLBException {
+public class LlbAlertException extends LlbException {
     private static final long serialVersionUID = 4908906410210213271L;
 
-    public LLBAlertException() {
+    public LlbAlertException() {
     }
 
-    public LLBAlertException(String msg) {
+    public LlbAlertException(String msg) {
         super(msg);
     }
 
-    public LLBAlertException(int code, String msg) {
+    public LlbAlertException(int code, String msg) {
         super(code, msg);
     }
 
-    public LLBAlertException(int code, String msg, Throwable cause) {
+    public LlbAlertException(int code, String msg, Throwable cause) {
         super(code, msg, cause);
     }
 }

@@ -66,7 +66,7 @@ public class GlobalExceptionHandler {
      * @param response
      * @return
      */
-    @ExceptionHandler({LLBException.class})
+    @ExceptionHandler({LlbException.class})
     public static ResultBody llbException(Exception ex, HttpServletRequest request, HttpServletResponse response) {
         ResultBody resultBody = resolveException(ex, request.getRequestURI());
         response.setStatus(resultBody.getHttpStatus());

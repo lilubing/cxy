@@ -24,13 +24,13 @@
     </properties>
 
     <dependencies>
-        <dependency>
+        <!--<dependency>
             <groupId>com.llb.cxy</groupId>
             <artifactId>common</artifactId>
             <version>${cxy.common.version}</version>
             <type>jar</type>
             <scope>compile</scope>
-        </dependency>
+        </dependency>-->
 
         <dependency>
             <groupId>com.llb.cxy</groupId>
@@ -52,6 +52,14 @@
                     <artifactId>common</artifactId>
                 </exclusion>
             </exclusions>-->
+        </dependency>
+
+        <dependency>
+            <groupId>com.llb.cxy</groupId>
+            <artifactId>redis-common</artifactId>
+            <version>${redis.common.version}</version>
+            <type>jar</type>
+            <scope>compile</scope>
         </dependency>
 
         <!-- mysql -->

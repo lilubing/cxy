@@ -91,4 +91,13 @@ public interface MenuButtonMapper extends MyMapper<MenuButtonPO, Long> {
      * @return {@link int}
      **/
     int deleteRoleMenuButton(Long roleId, Long menuButtonId);
+
+    /**
+     * 获取所有菜单按钮与角色信息
+     * @Author LiLuBing
+     * @Date 2021-01-21 19:42
+     * @Param  * @param 
+     * @return {@link List<Map<String, String>>}
+     **/
+    List<Map<String, String>> getAllMenuButtonAndRole();
 }

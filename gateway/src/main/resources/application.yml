@@ -70,6 +70,30 @@ spring:
       resourceserver:
         jwt:
           jwk-set-uri: 'http://localhost:8030/oauth2-authorization-server/rsa/publicKey' #配置RSA的公钥访问地址
+  redis:
+    # 单机版配置
+    host: 127.0.0.1
+    port: 6379
+    database: 0
+    # 集群配置
+    #    cluster:
+    #      max-redirects: 1
+    #      nodes:
+    #        - 127.0.0.1:7010
+    #        - 127.0.0.1:7011
+    #        - 127.0.0.1:7012
+    #    password:
+    lettuce:
+      pool:
+        #最大连接数据库连接数,设 0 为没有限制
+        max-active: 8
+        #最大等待连接中的数量,设 0 为没有限制
+        max-idle: 8
+        #最大建立连接等待时间。如果超过此时间将接到异常。设为-1表示无限制。
+        max-wait: 20
+        #最小等待连接中的数量,设 0 为没有限制
+        min-idle: 0
+      timeout: 1000
 
 eureka:
   instance:

@@ -173,4 +173,15 @@ public class MenuButtonDomainService {
     public MenuButton findByMenuButtonId(Long menuButtonId) {
         return menuButtonFactory.createMenuButton(menuButtonRepository.get(menuButtonId));
     }
+
+    /**
+     * 获取所有菜单按钮与角色信息
+     * @Author LiLuBing
+     * @Date 2021-01-21 09:35
+     * @Param  * @param
+     * @return {@link List<Map<String, String>>}
+     **/
+    public List<Map<String, String>> getAllMenuButtonAndRole() {
+        return menuButtonRepository.getAllMenuButtonAndRole();
+    }
 }

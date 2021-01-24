@@ -2,17 +2,17 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.llb.cxy.domain.user.repository.mapper.MenuButtonMapper">
     <resultMap id="BaseResultMap" type="com.llb.cxy.domain.user.repository.po.MenuButtonPO">
-        <id column="menu_button_id" jdbcType="BIGINT" property="menuButtonId" />
-        <result column="parent_id" jdbcType="BIGINT" property="parentId" />
-        <result column="btn_id" jdbcType="VARCHAR" property="btnId" />
-        <result column="name" jdbcType="VARCHAR" property="name" />
-        <result column="orders" jdbcType="SMALLINT" property="orders" />
-        <result column="type" jdbcType="TINYINT" property="type" />
-        <result column="menu_button_value" jdbcType="VARCHAR" property="menuButtonValue" />
-        <result column="uri" jdbcType="VARCHAR" property="uri" />
-        <result column="icon" jdbcType="VARCHAR" property="icon" />
-        <result column="state" jdbcType="TINYINT" property="state" />
-        <result column="create_time" jdbcType="INTEGER" property="createTime" />
+        <id column="menu_button_id" jdbcType="BIGINT" property="menuButtonId"/>
+        <result column="parent_id" jdbcType="BIGINT" property="parentId"/>
+        <result column="btn_id" jdbcType="VARCHAR" property="btnId"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="orders" jdbcType="SMALLINT" property="orders"/>
+        <result column="type" jdbcType="TINYINT" property="type"/>
+        <result column="menu_button_value" jdbcType="VARCHAR" property="menuButtonValue"/>
+        <result column="uri" jdbcType="VARCHAR" property="uri"/>
+        <result column="icon" jdbcType="VARCHAR" property="icon"/>
+        <result column="state" jdbcType="TINYINT" property="state"/>
+        <result column="create_time" jdbcType="INTEGER" property="createTime"/>
     </resultMap>
 
     <sql id="Base_Column_List">
@@ -75,5 +75,10 @@
         select distinct menu_button_id as menu_button_id from sys_role_menu_button
         where role_id in
             (select distinct role_id from sys_role_user where user_id = #{userId})
+    </select>
+    <select id="getAllMenuButtonAndRole" resultType="java.util.Map">
+        SELECT m.uri,r.role_id FROM cxy.sys_menu_button m
+        left join sys_role_menu_button r on m.menu_button_id = r.menu_button_id
+        where r.role_id is not null and m.uri != ''
     </select>
 </mapper>

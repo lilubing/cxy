@@ -95,7 +95,7 @@ public class MenuButtonApi extends BaseApi {
      * @Param  * @param menuButtonId
      * @return {@link com.llb.cxy.core.model.ResultBody}
      **/
-    @GetMapping
+    @GetMapping(value = "id")
     public ResultBody getMenuButton(@RequestParam Long menuButtonId) {
         try {
             MenuButtonDTO dto = menuButtonApplicationService.findByMenuButtonId(menuButtonId);
@@ -109,7 +109,26 @@ public class MenuButtonApi extends BaseApi {
     }
 
     /**
-     * 保存按钮与角色关联
+     * 查询所有菜单按钮
+     * @Author LiLuBing
+     * @Date 2021-01-14 09:10
+     * @Param  * @param
+     * @return {@link java.util.List<java.util.Map<java.lang.String,java.lang.Object>>}
+     **/
+    @GetMapping
+    public ResultBody getAllMenuButtonTree() {
+        try {
+            JSONObject jsonObject = this.getUserInfo();
+            return ResultBody.ok().data(menuButtonApplicationService.getAllMenuButtonByParentId(0L));
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("", e);
+            return ResultBody.failed().msg(e.getMessage());
+        }
+    }
+
+    /**
+     * 保存按钮与角色关联 给角色菜单按钮权限添加
      * @Author LiLuBing
      * @Date 2021-01-14 09:11
      * @Param  * @param menuButtonId
@@ -144,25 +163,6 @@ public class MenuButtonApi extends BaseApi {
     }
 
     /**
-     * 查询所有菜单按钮
-     * @Author LiLuBing
-     * @Date 2021-01-14 09:10
-     * @Param  * @param
-     * @return {@link java.util.List<java.util.Map<java.lang.String,java.lang.Object>>}
-     **/
-    @GetMapping(value = "getAllMenuButtonTree")
-    public ResultBody getAllMenuButtonTree() {
-        try {
-            JSONObject jsonObject = this.getUserInfo();
-            return ResultBody.ok().data(menuButtonApplicationService.getAllMenuButtonByParentId(0L));
-        } catch (Exception e) {
-            e.printStackTrace();
-            log.error("", e);
-            return ResultBody.failed().msg(e.getMessage());
-        }
-    }
-
-    /**
      * 根据用户查与菜单按钮的父节点ID询菜单按钮
      * @Author LiLuBing
      * @Date 2021-01-14 09:10
@@ -170,7 +170,7 @@ public class MenuButtonApi extends BaseApi {
      * @param userId
      * @return {@link List< Map< String, Object>>}
      **/
-    @ApiOperation(value="根据用户查与菜单按钮的父节点ID询菜单按钮", notes="menuButton/user_menu")
+    @ApiOperation(value="根据用户查与菜单按钮的父节点ID询菜单按钮", notes="menuButtons/user_menu")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "parentMenuId", value = "父节点ID", required = true, dataType = "Long"),
             @ApiImplicitParam(name = "userId", value = "用户ID", required = true, dataType = "Long")
@@ -190,7 +190,7 @@ public class MenuButtonApi extends BaseApi {
      * @param userId
      * @return {@link List< Map< String, Object>>}
      **/
-    @ApiOperation(value="根据用户查与菜单按钮的父节点ID询按钮菜单按钮", notes="menuButton/user_button")
+    @ApiOperation(value="根据用户查与菜单按钮的父节点ID询按钮菜单按钮", notes="menuButtons/user_button")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "parentMenuId", value = "父节点ID", required = true, dataType = "Long"),
             @ApiImplicitParam(name = "userId", value = "用户ID", required = true, dataType = "Long")

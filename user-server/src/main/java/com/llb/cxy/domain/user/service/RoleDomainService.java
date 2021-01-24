@@ -95,15 +95,14 @@ public class RoleDomainService {
      * @Author LiLuBing
      * @Date 2021-01-13 15:02
      * @Param * @param roleId
-     * @param userId
      * @return
      **/
     @Transactional(propagation = Propagation.REQUIRED, timeout = 3)
-    public void remove(Long roleId, Long userId) {
+    public void remove(Long roleId) {
         RolePO rolePO = roleRepository.get(roleId);
         Role role = roleFactory.createRole(rolePO);
         // 状态改为删除
-        role.delete(userId);
+        role.delete(SystemContext.getUserInfo().getLong("userId"));
         roleRepository.update(roleFactory.createRolePO(role));
         // 删除角色与用户关联
         roleUserRepository.deleteByRoleId(roleId);

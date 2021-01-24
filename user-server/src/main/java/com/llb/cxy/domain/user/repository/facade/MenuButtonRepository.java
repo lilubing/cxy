@@ -55,4 +55,13 @@ public interface MenuButtonRepository extends GenericManager<MenuButtonPO, Long>
      * @return {@link List< Map< String, Object>>}
      **/
     List<Map<String, Object>> findMenuButtonByUserId(Long userId, Long parentMenuId, Integer menuButtonType);
+
+    /**
+     * 获取所有菜单按钮与角色信息
+     * @Author LiLuBing
+     * @Date 2021-01-21 09:37
+     * @Param  * @param 
+     * @return
+     **/
+    List<Map<String, String>> getAllMenuButtonAndRole();
 }

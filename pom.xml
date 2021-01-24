@@ -29,6 +29,7 @@
         <module>user-server</module>
         <module>mybatis-web</module>
         <module>mybatis-crm</module>
+        <module>redis-common</module>
     </modules>
     
     <developers>
@@ -57,12 +58,15 @@
         <gateway.version>2.0.1-SNAPSHOT</gateway.version>
         <discovery.eureka.version>2.0.1-SNAPSHOT</discovery.eureka.version>
 
-        <spring-boot-devtools.version>2.3.2.RELEASE</spring-boot-devtools.version>
-        <lombok.version>1.18.10</lombok.version>
 
+        <redis.common.version>2.0.1-SNAPSHOT</redis.common.version>
         <mybatis.version>2.0.1-SNAPSHOT</mybatis.version>
         <mybatis.common.version>2.0.1-SNAPSHOT</mybatis.common.version>
         <mybatis.generator.version>2.0.1-SNAPSHOT</mybatis.generator.version>
+
+
+        <spring-boot-devtools.version>2.3.2.RELEASE</spring-boot-devtools.version>
+        <lombok.version>1.18.10</lombok.version>
 
         <oauth2.common.version>2.0.1-SNAPSHOT</oauth2.common.version>
         <oauth2.common.starter.version>2.0.1-SNAPSHOT</oauth2.common.starter.version>
@@ -86,6 +90,7 @@
         <commons-text.version>1.8</commons-text.version>
         <apache.commons.beanutils>1.9.4</apache.commons.beanutils>
         <commons-io.version>2.6</commons-io.version>
+        <commons-pool2.version>2.9.0</commons-pool2.version>
 
         <!--
         <guava.version>25.1-jre</guava.version>
